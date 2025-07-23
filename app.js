@@ -22,6 +22,5 @@ mongoose
     console.error('MongoDB Error:', err);
   });
 
-// Routes
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
