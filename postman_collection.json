@@ -1,0 +1,124 @@
+
+{
+  "info": {
+    "_postman_id": "ec3e63b5-ffb1-432c-9b97-7d2f2c2fa22b",
+    "name": "Ecommerce API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /brands",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"brandName\": \"Nike\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/brands",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "brands"]
+        }
+      }
+    },
+    {
+      "name": "PUT /brands/:id",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"brandName\": \"Adidas\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/brands/{{brandId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "brands", "{{brandId}}"]
+        }
+      }
+    },
+    {
+      "name": "GET /brands",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/brands",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "brands"]
+        }
+      }
+    },
+    {
+      "name": "DELETE /brands/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:5000/api/brands/{{brandId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "brands", "{{brandId}}"]
+        }
+      }
+    },
+    {
+      "name": "POST /products",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Air Max\",\n  \"price\": 120,\n  \"description\": \"Nike running shoes\",\n  \"brand\": \"{{brandId}}\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "products"]
+        }
+      }
+    },
+    {
+      "name": "GET /products/:brand/:page/:limit",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/products/{{brandId}}/1/5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "products", "{{brandId}}", "1", "5"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "brandId",
+      "value": ""
+    }
+  ]
+}

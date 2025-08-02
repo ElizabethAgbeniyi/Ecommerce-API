@@ -27,4 +27,8 @@ mongoose
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
-app.use ('/brand', brandRoutes);
+app.use ('/api', brandRoutes);
+
+app.listen(PORT, () => {
+  console.log('Server running on PORT ${PORT}');
+});
