@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
+const userRoutes = require('./users');
+const brandRoutes = require('./routes/brand');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,3 +26,5 @@ mongoose
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use('/users', userRoutes);
+app.use ('/brand', brandRoutes);

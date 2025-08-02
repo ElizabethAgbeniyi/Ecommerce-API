@@ -5,8 +5,14 @@ const { authMiddleware, adminOnly } = require('../middleware/auth');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  console.log("GET /products hit");
+  try {
   const products = await Product.find();
   res.json(products);
+} catch (err) {
+    console.error("Error fetching products:", err);
+    res.status(500).json({ message: "Server error" });
+}
 });
 
 router.post('/', authMiddleware, adminOnly, async (req, res) => {

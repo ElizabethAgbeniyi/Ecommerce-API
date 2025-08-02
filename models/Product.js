@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const productSchema = new mongoose.Schema({
   productName: String,
@@ -8,7 +9,12 @@ const productSchema = new mongoose.Schema({
   productImages: [String],
   description: String,
   stockStatus: String,
-});
+  brand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand'
+  }
+}, { timestamps: true });
+
+productSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Product', productSchema);
-

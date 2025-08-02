@@ -35,4 +35,21 @@ router.post('/login', async (req, res) => {
   res.json({ token });
 });
 
+router.delete('/:id', authMiddleware, adminOnly, async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'User deleted successfully', user: deletedUser });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ message: 'Server error while deleting user' });
+  }
+});
+
+
 module.exports = router;
