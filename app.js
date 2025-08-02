@@ -7,7 +7,7 @@ const userRoutes = require('./users');
 const brandRoutes = require('./routes/brand');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5155;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(express.json());
@@ -28,7 +28,3 @@ app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use ('/api', brandRoutes);
-
-app.listen(PORT, () => {
-  console.log('Server running on PORT ${PORT}');
-});
