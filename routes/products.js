@@ -6,12 +6,14 @@ const { populate } = require('../models/User');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.find()
+  .populate('brand')
+  .exec();
   res.json(products);
 });
 
 router.post('/add', authMiddleware, adminOnly, async (req, res) => {
-  const { productName, cost, productImages, description, stockStatus } = req.body;
+  const { productName, cost, productImages, brandId, description, stockStatus } = req.body;
   const ownerId = req.user.userId;
 
   try {
@@ -19,6 +21,7 @@ router.post('/add', authMiddleware, adminOnly, async (req, res) => {
       productName,
       ownerId,
       cost,
+      brand: brandId,
       productImages,
       description,
       stockStatus
@@ -39,6 +42,7 @@ router.delete('/:id', authMiddleware, adminOnly, async (req, res) => {
 });
 
 router.get('/products/:brand/:page/:limit', async (req, res) => {
+  console.log("Params:", req.params);
   const { brand, page, limit } = req.params;
   try {
     const options = {
@@ -52,6 +56,25 @@ router.get('/products/:brand/:page/:limit', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+router.post('/products', async (req, res) => {
+  try {
+    const { name, description, price, brand } = req.body;
+    const product = new Product({ name, description, price, brand });
+    await product.save();
+    res.status(201).json(product);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.get('/test', (req, res) => {
+  const brand = 'some-id';
+  const page = 1;
+  const limit = 5;
+  console.log('Brand:', brand, 'Page:', page, 'Limit:', limit);
+  res.send('Check console');
 });
 
 module.exports = router;

@@ -6,7 +6,8 @@ const brandSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        required: true
     }
 }, { timestamps: true });
 

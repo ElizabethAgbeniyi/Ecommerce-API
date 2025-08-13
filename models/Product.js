@@ -3,15 +3,16 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const productSchema = new mongoose.Schema({
-  productName: String,
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  cost: Number,
-  productImages: [String],
-  description: String,
-  stockStatus: String,
+  productName: { type: String, required: true},
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  cost: { type: Number, required: true },
+  productImages: { type: [String], required: true },
+  description: { type: String, required: true },
+  stockStatus: { type: String, required: true },
   brand: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Brand'
+    ref: 'Brand',
+    required: true
   }
 }, { timestamps: true });
 
