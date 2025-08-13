@@ -38,7 +38,7 @@ router.delete('/:id', authMiddleware, adminOnly, async (req, res) => {
   }
 });
 
-router.get('/products/:brand/:page/:lomit', async (req, res) => {
+router.get('/products/:brand/:page/:limit', async (req, res) => {
   const { brand, page, limit } = req.params;
   try {
     const options = {

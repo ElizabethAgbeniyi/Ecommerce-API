@@ -25,6 +25,6 @@ mongoose
   });
 
 app.use('/auth', authRoutes);
-app.use('/products', productRoutes);
+app.use('/api', productRoutes);
 app.use('/users', userRoutes);
 app.use ('/api', brandRoutes);
