@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./users');
 const brandRoutes = require('./routes/brand');
+const orderRoutes = require('./routes/order');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,4 +28,5 @@ mongoose
 app.use('/auth', authRoutes);
 app.use('/api', productRoutes);
 app.use('/users', userRoutes);
-app.use ('/api', brandRoutes);
+app.use('/api', brandRoutes);
+app.use('/api', order);
