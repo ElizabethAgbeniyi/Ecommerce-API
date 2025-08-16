@@ -7,28 +7,40 @@ const { verifyToken, authorizeRoles } = require('../middleware/verifyToken.js');
 /** Customer: Create order */
 router.post("/order", verifyToken, authorizeRoles("customer"), async (req, res) => {
   try {
-    const { items } = req.body;
-    if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: "Items array is required" });
+    let { items, productName, productId, quantity, price, shippingStatus } = req.body;
+    if (!items) {
+      if (!productId || !productName || !quantity) {
+                return res.status(400).json({ 
+                    message: "Either 'items' array or 'productId', 'productName', and 'quantity' are required" 
+                });
+            }
+            
+            items = [{
+                productId,
+                productName,
+                quantity,
+                price: price || 0,
+                shippingStatus: shippingStatus || "pending"
+            }];
+        }
+        
+        if (!Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ message: "Items array is required" });
+        }
+
+        const order = await Order.create({
+            customerId: req.user.id,
+            items: sanitized,
+            totalCost: req.body.totalCost || sanitized.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+            orderStatus: req.body.orderStatus || "pending"
+        });
+
+        res.status(201).json({ message: "Order created", order });
+
+    } catch (error) {
+        console.error('Order creation error:', error);
+        res.status(500).json({ message: error.message });
     }
-    // Optional: server-side sanitation of each item
-    const sanitized = items.map(i => ({
-      productName: i.productName,
-      productId: i.productId,
-      quantity: i.quantity,
-      totalCost: i.totalCost,
-      shippingStatus: i.shippingStatus ?? "pending"
-    }));
-
-    const order = await Order.create({
-      customerId: req.user.id,
-      items: sanitized
-    });
-
-    res.status(201).json({ message: "Order created", order });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 });
 
 /** Admin: View all orders */
