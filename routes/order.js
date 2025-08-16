@@ -28,6 +28,14 @@ router.post("/order", verifyToken, authorizeRoles("customer"), async (req, res) 
             return res.status(400).json({ message: "Items array is required" });
         }
 
+        const sanitized = items.map(i => ({
+          productName: i.productName,
+          productId: i.productId,
+          quantity: i.quantity,
+          price: i.price || 0,
+          shippingStatus: i.shippingStatus || "pending"
+        }));
+
         const order = await Order.create({
             customerId: req.user.id,
             items: sanitized,
