@@ -1,5 +1,5 @@
 
-import jwt from "jsonwebtoken";
+const jwt = require('jsonwebtoken');
 
 export const verifyToken = (req, res, next) => {
   try {
