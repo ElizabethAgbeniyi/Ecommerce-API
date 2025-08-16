@@ -29,4 +29,4 @@ app.use('/auth', authRoutes);
 app.use('/api', productRoutes);
 app.use('/users', userRoutes);
 app.use('/api', brandRoutes);
-app.use('/api', order);
+app.use('/api', orderRoutes);

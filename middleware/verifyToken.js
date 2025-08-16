@@ -1,18 +1,32 @@
 
 const jwt = require('jsonwebtoken');
 
-export const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) {
+    return res.status(401).json({ message: 'Access denied. No token provided.' });
+  }
   try {
-    const auth = req.headers.authorization || "";
-    const [type, token] = auth.split(" ");
-    if (type !== "Bearer" || !token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Expect your JWT to include: { id, role, ... }
-    req.user = { id: decoded.id, role: decoded.role };
+    req.user = decoded;
     next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid token.' });
   }
 };
+
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    if (!roles.includes(req.user.role)) {
+        return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+    }
+    
+    next();
+  };
+};
+
+module.exports = {verifyToken, authorizeRoles };

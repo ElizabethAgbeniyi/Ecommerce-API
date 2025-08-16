@@ -1,10 +1,8 @@
 
 const express = require('express');
-const Order = require('../models/Order.js');
-const { verifyToken } = require('../middleware/verifyToken.js');
-const { authorizeRoles } = require('../middleware/auth.js');
-
 const router = express.Router();
+const Order = require('../models/Order.js');
+const { verifyToken, authorizeRoles } = require('../middleware/verifyToken.js');
 
 /** Customer: Create order */
 router.post("/order", verifyToken, authorizeRoles("customer"), async (req, res) => {
@@ -59,23 +57,38 @@ router.get("/orders/:id", verifyToken, authorizeRoles("admin"), async (req, res)
 
 /** Admin: Update order status */
 router.patch("/orders/:id/status", verifyToken, authorizeRoles("admin"), async (req, res) => {
-  try {
-    const { status } = req.body;
+try {
+const { status } = req.body;
+
+    // Validate status
     if (!["pending", "shipped", "delivered"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status. Use pending|shipped|delivered." });
+        return res.status(400).json({ 
+            message: "Invalid status. Use pending|shipped|delivered." 
+        });
     }
 
+    // Find and update the order
     const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { orderStatus: status, "items.$[].shippingStatus": status }, 
-      { new: true }
+        req.params.id,
+        { 
+            orderStatus: status, 
+            "items.$[].shippingStatus": status 
+        },
+        { new: true }
     );
 
-    if (!order) return res.status(404).json({ message: "Order not found" });
-    res.json({ message: "Order status updated", order });
-  } catch (error) {
+    if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json({ 
+        message: "Order status updated", 
+        order 
+    });
+
+} catch (error) {
     res.status(500).json({ message: error.message });
-  }
+}
 });
 
-export default router;
+module.exports = router;

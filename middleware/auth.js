@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 
-exports.authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
@@ -17,16 +17,11 @@ exports.authMiddleware = (req, res, next) => {
   }
 };
 
-exports.adminOnly = (req, res, next) => {
+const adminOnly = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: "Admin access only" });
   }
   next();
 };
 
-export const authorizeRoles = (...roles) => (req, res, next) => {
-  if (!req.user?.role || !roles.includes(req.user.role)) {
-    return res.status(403).json({ message: "Access denied" });
-  }
-  next();
-};
+module.exports = { authMiddleware, adminOnly };
