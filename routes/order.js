@@ -8,6 +8,10 @@ const { verifyToken, authorizeRoles } = require('../middleware/verifyToken.js');
 router.post("/order", verifyToken, authorizeRoles("customer"), async (req, res) => {
   try {
     let { items, productName, productId, quantity, price, shippingStatus } = req.body;
+
+    console.log('req.user:', req.user);
+    console.log('Request body:', req.body);
+
     if (!items) {
       if (!productId || !productName || !quantity) {
                 return res.status(400).json({ 
@@ -36,18 +40,27 @@ router.post("/order", verifyToken, authorizeRoles("customer"), async (req, res) 
           shippingStatus: i.shippingStatus || "pending"
         }));
 
-        const order = await Order.create({
-            customerId: req.user.id,
-            items: sanitized,
-            totalCost: req.body.totalCost || sanitized.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-            orderStatus: req.body.orderStatus || "pending"
-        });
+        const calculatedTotalCost = sanitized.reduce ((sum, item) => sum + (item.price * item.quantity), 0);
+
+        const orderData = {
+          customerId: req.user.id || req.user._id,
+          items: sanitized,
+          totalCost: req.body.totalCost || calculatedTotalCost,
+          orderStatus: req.body.orderStatus || "pending"
+        };
+
+        console.log('Order data to create:', orderData);
+
+        const order = await Order.create(orderData);
 
         res.status(201).json({ message: "Order created", order });
 
     } catch (error) {
         console.error('Order creation error:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 
+          message: error.message,
+          details: error.errors
+         });
     }
 });
 
